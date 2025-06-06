@@ -138,10 +138,10 @@ export function ClientList({
         const bName = b.name.split(' ');
         
         if (sortBy === 'first') {
-          comparison = aName[0].localeCompare(bName[0]);
+          comparison = (aName[0] || '').localeCompare(bName[0] || '');
         } else {
-          const aLast = aName[aName.length - 1];
-          const bLast = bName[bName.length - 1];
+          const aLast = aName[aName.length - 1] || '';
+          const bLast = bName[bName.length - 1] || '';
           comparison = aLast.localeCompare(bLast);
         }
         break;
@@ -192,7 +192,7 @@ export function ClientList({
   );
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && filteredClients.length === 1) {
+    if (e.key === 'Enter' && filteredClients.length === 1 && filteredClients[0]) {
       onSelectClient(filteredClients[0]._id);
     } else if (e.key === 'Escape') {
       setSearchTerm('');
@@ -314,8 +314,8 @@ export function ClientList({
                       <div>
                         <div className="flex items-center justify-center gap-1">
                           <h3 className="text-sm font-medium">{client.name}</h3>
-                          {todoCounts[client._id]?.incomplete > 0 && (
-                            <div title={`${todoCounts[client._id].incomplete} incomplete todo${todoCounts[client._id].incomplete !== 1 ? 's' : ''}`}>
+                          {(todoCounts[client._id!]?.incomplete ?? 0) > 0 && (
+                            <div title={`${todoCounts[client._id!]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id!]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
                               <ClipboardList className="w-3 h-3 text-blue-500" />
                             </div>
                           )}
@@ -420,8 +420,8 @@ export function ClientList({
                   <div>
                     <div className="flex items-center gap-1">
                       <h3 className="text-base font-medium">{client.name}</h3>
-                      {todoCounts[client._id]?.incomplete > 0 && (
-                        <div title={`${todoCounts[client._id].incomplete} incomplete todo${todoCounts[client._id].incomplete !== 1 ? 's' : ''}`}>
+                      {(todoCounts[client._id!]?.incomplete ?? 0) > 0 && (
+                        <div title={`${todoCounts[client._id!]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id!]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
                           <ClipboardList className="w-3 h-3 text-blue-500" />
                         </div>
                       )}

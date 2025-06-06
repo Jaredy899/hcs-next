@@ -35,7 +35,7 @@ export function QuarterlyReviewsSection({ client, pendingChanges }: QuarterlyRev
       const pendingValue = pendingChanges.getDateState(client._id, qrField, client[qrField] || undefined);
       const date = pendingValue !== undefined && pendingValue !== null
         ? new Date(pendingValue)
-        : getQuarterlyReviewDates(client?.nextAnnualAssessment || Date.now())[i].date;
+        : getQuarterlyReviewDates(client.nextAnnualAssessment)[i]?.date || new Date();
       return date.getMonth() + 1;
     })
   );
@@ -49,7 +49,7 @@ export function QuarterlyReviewsSection({ client, pendingChanges }: QuarterlyRev
           const pendingValue = pendingChanges.getDateState(client._id, qrField, client[qrField] || undefined);
           const date = pendingValue !== undefined && pendingValue !== null
             ? new Date(pendingValue)
-            : getQuarterlyReviewDates(client?.nextAnnualAssessment || Date.now())[i].date;
+            : getQuarterlyReviewDates(client.nextAnnualAssessment)[i]?.date || new Date();
           return date.getMonth() + 1;
         })
       );
@@ -140,7 +140,7 @@ export function QuarterlyReviewsSection({ client, pendingChanges }: QuarterlyRev
               <span className="text-sm font-medium text-muted-foreground w-20">{qr.label}:</span>
               <div className="flex items-center gap-1 flex-1">
                 <Select
-                  value={month.toString()}
+                  value={month?.toString() || "1"}
                   onValueChange={(value) => {
                     const newMonth = parseInt(value);
                     handleQrDateChange(index, newMonth);
