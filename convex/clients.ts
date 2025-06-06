@@ -355,8 +355,14 @@ export const bulkImport = mutation({
         console.log(`Found existing client: ${client.clientId} (${client.planProgram})`);
       } else {
         // Parse the annual assessment date from MM/DD/YYYY format
-        const [month, day, year] = client.annualAssessmentDate.split('/').map(Number);
+        const dateParts = client.annualAssessmentDate.split('/').map(Number);
+        const [month, day, year] = dateParts;
         console.log('Parsed date:', { month, day, year, original: client.annualAssessmentDate });
+        
+        // Validate that we have valid date components
+        if (dateParts.length !== 3 || !month || !day || !year || month < 1 || month > 12) {
+          throw new Error(`Invalid date format: ${client.annualAssessmentDate}. Expected MM/DD/YYYY format.`);
+        }
         
         // Set the date to the first of the month at noon UTC to avoid timezone issues
         // Note: JavaScript months are 0-based, so we subtract 1 from the month
@@ -488,7 +494,13 @@ export const bulkImportSimple = mutation({
         console.log(`Found existing client: ${client.clientId}`);
       } else {
         // Parse the annual assessment date from MM/DD/YYYY format
-        const [month, day, year] = client.annualAssessmentDate.split('/').map(Number);
+        const dateParts = client.annualAssessmentDate.split('/').map(Number);
+        const [month, day, year] = dateParts;
+        
+        // Validate that we have valid date components
+        if (dateParts.length !== 3 || !month || !day || !year || month < 1 || month > 12) {
+          throw new Error(`Invalid date format: ${client.annualAssessmentDate}. Expected MM/DD/YYYY format.`);
+        }
         
         // Set the date to the first of the month at noon UTC to avoid timezone issues
         const annualAssessmentDate = new Date(Date.UTC(year, month - 1, 1, 12, 0, 0)).getTime();
