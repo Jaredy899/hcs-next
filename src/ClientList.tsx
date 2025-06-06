@@ -202,7 +202,7 @@ export function ClientList({
     }
   };
 
-  const handleMarkComplete = async (clientId: Id<"clients">, type: 'qr' | 'annual') => {
+  const _handleMarkComplete = async (clientId: Id<"clients">, type: 'qr' | 'annual') => {
     const today = new Date().getTime();
     await updateClient({
       id: clientId,
@@ -298,7 +298,7 @@ export function ClientList({
             </TableHeader>
             <TableBody>
               {filteredClients.map((client) => {
-                const upcomingDates = getUpcomingDates(client);
+                const _upcomingDates = getUpcomingDates(client);
                 
                 return (
                   <TableRow
@@ -351,16 +351,16 @@ export function ClientList({
                         : <span className="text-gray-400">Not set</span>}
                     </TableCell> */}
                     <TableCell className="text-center text-xs">
-                      {upcomingDates.nextQRDate ? (
+                      {_upcomingDates.nextQRDate ? (
                         <div className="flex items-center justify-center gap-1">
-                          <span className={`${upcomingDates.isQRDue ? "text-red-600 font-bold" : "text-blue-600 font-medium"}`}>
-                            {upcomingDates.nextQRDate.toLocaleDateString(undefined, {
+                          <span className={`${_upcomingDates.isQRDue ? "text-red-600 font-bold" : "text-blue-600 font-medium"}`}>
+                            {_upcomingDates.nextQRDate.toLocaleDateString(undefined, {
                               month: "short",
                               day: "numeric",
                             })}
                           </span>
                           <span className="text-blue-400 text-xs">
-                            (Q{upcomingDates.nextQRIndex + 1})
+                            (Q{_upcomingDates.nextQRIndex + 1})
                           </span>
                         </div>
                       ) : (

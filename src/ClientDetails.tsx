@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { type Id } from "../convex/_generated/dataModel";
 import { ContactInformationSection } from "./components/ContactInformationSection";
@@ -24,18 +24,18 @@ export function ClientDetails({
   const archiveClient = useMutation(api.clients.archive);
   const pendingChanges = usePendingChanges();
 
-  const handleClose = async () => {
+  const handleClose = useCallback(async () => {
     if (pendingChanges.hasPendingChanges) {
       try {
         await pendingChanges.syncChanges();
         toast.success("Changes saved");
-      } catch (error) {
+      } catch {
         toast.error("Failed to save changes");
         return; // Don't close if sync failed
       }
     }
     onClose();
-  };
+  }, [pendingChanges.hasPendingChanges, pendingChanges.syncChanges, onClose]);
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {
@@ -55,7 +55,7 @@ export function ClientDetails({
       if (pendingChanges.hasPendingChanges) {
         try {
           await pendingChanges.syncChanges();
-        } catch (error) {
+        } catch {
           toast.error("Failed to save pending changes");
           return;
         }

@@ -52,7 +52,7 @@ export function ContactInformationSection({ client }: ContactInformationSectionP
       ]);
       setIsEditingContact(false);
       toast.success("Contact information updated");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update contact information");
     }
   };

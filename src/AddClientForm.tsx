@@ -50,7 +50,6 @@ export function AddClientForm({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     const today = new Date();
     const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const qrDates = getQuarterlyReviewDates(firstOfMonth.getTime());
     
     await addClient({
       name: formData.name,
