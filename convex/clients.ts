@@ -289,30 +289,47 @@ export const bulkImport = mutation({
       return Object.keys(caseManagementPrograms).includes(program.trim());
     };
 
+    // Function to check if a client should be imported (case management or no program)
+    const shouldImportClient = (program: string | undefined): boolean => {
+      if (!program) return true; // Import clients with no program
+      return isCaseManagement(program); // Import only if it's a case management program
+    };
+
     // Function to get program priority
     const getProgramPriority = (program: string | undefined): number => {
       if (!program) return 0;
       return caseManagementPrograms[program.trim() as keyof typeof caseManagementPrograms] || 0;
     };
 
-    // Deduplicate clients by clientId, keeping only case management relevant entries
+    // Deduplicate clients by clientId, with smart case management prioritization
     const clientMap = new Map<string, typeof args.clients[0]>();
     
     for (const client of args.clients) {
+      // Skip clients that don't meet import criteria
+      if (!shouldImportClient(client.planProgram)) {
+        continue;
+      }
+
       const existingEntry = clientMap.get(client.clientId);
       
       if (!existingEntry) {
-        // First entry for this clientId - only keep if it's case management
-        if (isCaseManagement(client.planProgram)) {
-          clientMap.set(client.clientId, client);
-        }
+        // First entry for this clientId - keep it (already validated by shouldImportClient)
+        clientMap.set(client.clientId, client);
       } else {
-        // Duplicate clientId found - apply case management filtering and priority rules
+        // Duplicate clientId found - apply smart prioritization rules
         const currentPriority = getProgramPriority(client.planProgram);
         const existingPriority = getProgramPriority(existingEntry.planProgram);
         
-        // Only consider this entry if it's case management
-        if (currentPriority > 0) {
+        // If current entry has case management program and existing doesn't, use current
+        if (currentPriority > 0 && existingPriority === 0) {
+          clientMap.set(client.clientId, client);
+        }
+        // If existing has case management program and current doesn't, keep existing
+        else if (existingPriority > 0 && currentPriority === 0) {
+          // Keep existing entry
+        }
+        // If both have case management programs, use priority rules
+        else if (currentPriority > 0 && existingPriority > 0) {
           // If current entry has higher priority, replace the existing one
           if (currentPriority > existingPriority) {
             clientMap.set(client.clientId, client);
@@ -335,11 +352,26 @@ export const bulkImport = mutation({
           }
           // If current priority is lower, keep the existing entry
         }
-        // If current entry is not case management, skip it
+        // If neither has case management programs, use the later assessment date
+        else {
+          try {
+            const currentDate = new Date(client.annualAssessmentDate);
+            const existingDate = new Date(existingEntry.annualAssessmentDate);
+            
+            // If current date is later (further in the future), use this entry
+            if (currentDate > existingDate) {
+              clientMap.set(client.clientId, client);
+            }
+            // If existing date is later or same, keep the existing entry
+          } catch (error) {
+            console.warn(`Error parsing dates for client ${client.clientId}: current=${client.annualAssessmentDate}, existing=${existingEntry.annualAssessmentDate}`);
+            // If date parsing fails, keep the existing entry (first occurrence)
+          }
+        }
       }
     }
 
-    console.log(`Processing ${clientMap.size} unique case management clients after deduplication from ${args.clients.length} total entries`);
+    console.log(`Processing ${clientMap.size} unique clients after smart deduplication from ${args.clients.length} total entries`);
 
     const results = [];
     for (const [clientId, client] of clientMap) {
@@ -419,7 +451,7 @@ export const bulkImport = mutation({
       results.push(clientDbId);
     }
     
-    console.log(`Successfully processed ${results.length} case management clients`);
+    console.log(`Successfully processed ${results.length} clients with smart prioritization`);
     return results;
   },
 });

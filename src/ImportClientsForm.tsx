@@ -90,13 +90,7 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             authorizationId
           ] = fields;
           
-          // Debug logging for all rows
-          console.log(`Row ${i + 1} (${firstName} ${lastName}):`, {
-            totalFields: fields.length,
-            fields: fields,
-            rawLine: currentLine,
-            authorizationId: authorizationId
-          });
+
 
           // Skip rows with missing essential data (first and last name required)
           if (!firstName?.trim() || !lastName?.trim()) {
@@ -131,7 +125,6 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
         throw new Error('No valid client records found in CSV');
       }
 
-      console.log(`Parsed ${clients.length} clients, ${errors.length} errors`);
       if (errors.length > 0) {
         console.warn('Parsing errors:', errors);
       }
@@ -139,8 +132,8 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
       await bulkImport({ 
         clients
       });
-      
-      const successMessage = `Successfully imported clients with WCCSS prioritization`;
+        
+      const successMessage = `Successfully imported ${clients.length} clients`;
       const warningMessage = errors.length > 0 ? ` (${errors.length} rows had errors and were skipped)` : '';
       setSuccess(successMessage + warningMessage);
       setError(null);
