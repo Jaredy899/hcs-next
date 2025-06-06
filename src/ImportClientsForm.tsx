@@ -89,10 +89,18 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             planEndDate,
             authorizationId
           ] = fields;
+          
+          // Debug logging for all rows
+          console.log(`Row ${i + 1} (${firstName} ${lastName}):`, {
+            totalFields: fields.length,
+            fields: fields,
+            rawLine: currentLine,
+            authorizationId: authorizationId
+          });
 
           // Skip rows with missing essential data (first and last name required)
           if (!firstName?.trim() || !lastName?.trim()) {
-            errors.push(`Row ${i + 1}: Missing first name or last name`);
+            errors.push(`Row ${i + 1}: Missing first name or last name - firstName: "${firstName}", lastName: "${lastName}"`);
             continue;
           }
 
