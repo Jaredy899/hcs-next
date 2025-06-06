@@ -406,7 +406,7 @@ export function ClientList({
         {/* Mobile card view */}
         <div className="md:hidden space-y-4">
           {filteredClients.map((client) => {
-            const upcomingDates = getUpcomingDates(client);
+            const _upcomingDates = getUpcomingDates(client);
             
             return (
               <Card

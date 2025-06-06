@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 
-function getQuarterlyReviewDates(annualAssessmentDate: number) {
+function _getQuarterlyReviewDates(annualAssessmentDate: number) {
   const date = new Date(annualAssessmentDate);
   const year = date.getFullYear();
   const month = date.getMonth();

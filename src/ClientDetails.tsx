@@ -35,7 +35,7 @@ export function ClientDetails({
       }
     }
     onClose();
-  }, [pendingChanges.hasPendingChanges, pendingChanges.syncChanges, onClose]);
+  }, [pendingChanges, onClose]);
 
   useEffect(() => {
     const handleKeyDown = async (e: KeyboardEvent) => {

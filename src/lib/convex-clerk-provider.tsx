@@ -30,7 +30,7 @@ export function ConvexProviderWithClerk({ children }: { children: React.ReactNod
         return null;
       }
     },
-  }), [auth.isLoaded, auth.isSignedIn, auth.userId, auth.sessionId, auth.getToken, auth]);
+  }), [auth]);
 
   return (
     <ConvexProviderWithAuth client={convex} useAuth={() => convexAuth}>
