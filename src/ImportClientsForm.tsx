@@ -77,7 +77,7 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
           const fields = parseCSVLine(currentLine);
           
           // Map fields based on your CSV structure:
-          // Id, First Name, Last Name, Preferred Name, Client/Record ID, Cell Phone, Plan Program, Plan End Date, Primary Provider, Authorization ID
+          // Id, First Name, Last Name, Preferred Name, Client/Record ID, Cell Phone, Plan Program, Plan End Date, Authorization ID
           const [
             id,
             firstName,
@@ -87,7 +87,6 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             cellPhone,
             planProgram,
             planEndDate,
-            _primaryProvider,
             authorizationId
           ] = fields;
 
