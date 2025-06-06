@@ -56,7 +56,11 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
       }
 
       // Parse header to understand column structure
-      const headerFields = parseCSVLine(lines[0]);
+      const firstLine = lines[0];
+      if (!firstLine) {
+        throw new Error('CSV file appears to be empty');
+      }
+      const headerFields = parseCSVLine(firstLine);
       console.log('CSV Headers:', headerFields);
       
       // Skip header row and parse data
@@ -65,7 +69,12 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
       
       for (let i = 1; i < lines.length; i++) {
         try {
-          const fields = parseCSVLine(lines[i]);
+          const currentLine = lines[i];
+          if (!currentLine) {
+            errors.push(`Row ${i + 1}: Empty line`);
+            continue;
+          }
+          const fields = parseCSVLine(currentLine);
           
           // Map fields based on your CSV structure:
           // Id, First Name, Last Name, Preferred Name, Client/Record ID, Cell Phone, Plan Program, Plan End Date, Primary Provider, Authorization ID
@@ -92,7 +101,7 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             firstName: firstName.trim(),
             lastName: lastName.trim(),
             preferredName: preferredName?.trim() || undefined,
-            clientId: clientRecordId?.trim() || id?.trim(),
+            clientId: clientRecordId?.trim() || id?.trim() || "No ID provided",
             phoneNumber: cellPhone?.trim() || "No phone provided",
             insurance: authorizationId?.trim() || "No insurance provided",
             annualAssessmentDate: planEndDate?.trim() || "12/31/2025",

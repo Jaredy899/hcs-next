@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, ReactNode } from 'react';
+import React, { createContext, useContext, useRef, type ReactNode } from 'react';
 
 interface SearchContextType {
   searchInputRef: React.RefObject<HTMLInputElement | null>;

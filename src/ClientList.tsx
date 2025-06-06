@@ -314,8 +314,8 @@ export function ClientList({
                       <div>
                         <div className="flex items-center justify-center gap-1">
                           <h3 className="text-sm font-medium">{client.name}</h3>
-                          {(todoCounts[client._id!]?.incomplete ?? 0) > 0 && (
-                            <div title={`${todoCounts[client._id!]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id!]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
+                          {(todoCounts[client._id]?.incomplete ?? 0) > 0 && (
+                            <div title={`${todoCounts[client._id]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
                               <ClipboardList className="w-3 h-3 text-blue-500" />
                             </div>
                           )}
@@ -420,8 +420,8 @@ export function ClientList({
                   <div>
                     <div className="flex items-center gap-1">
                       <h3 className="text-base font-medium">{client.name}</h3>
-                      {(todoCounts[client._id!]?.incomplete ?? 0) > 0 && (
-                        <div title={`${todoCounts[client._id!]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id!]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
+                      {(todoCounts[client._id]?.incomplete ?? 0) > 0 && (
+                        <div title={`${todoCounts[client._id]?.incomplete ?? 0} incomplete todo${(todoCounts[client._id]?.incomplete ?? 0) !== 1 ? 's' : ''}`}>
                           <ClipboardList className="w-3 h-3 text-blue-500" />
                         </div>
                       )}
