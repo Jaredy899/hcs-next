@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Id } from "../../convex/_generated/dataModel";
+import { type Id } from "../../convex/_generated/dataModel";
 import { QuarterlyReviewsSection } from "./QuarterlyReviewsSection";
 import { getQuarterlyReviewDates } from "./utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

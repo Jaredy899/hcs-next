@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import { Id } from "../convex/_generated/dataModel";
+import { type Id } from "../convex/_generated/dataModel";
 import { ContactInformationSection } from "./components/ContactInformationSection";
 import { ImportantDatesSection } from "./components/ImportantDatesSection";
 import { ContactStatusSection } from "./components/ContactStatusSection";
