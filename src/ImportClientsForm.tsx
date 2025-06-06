@@ -99,7 +99,7 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
 
           // Handle insurance field more robustly
           let insurance = "No insurance provided";
-          if (authorizationId && authorizationId.trim()) {
+          if (authorizationId?.trim()) {
             insurance = authorizationId.trim();
           }
 
