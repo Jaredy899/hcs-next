@@ -91,10 +91,16 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             authorizationId
           ] = fields;
 
-          // Skip rows with missing essential data
-          if (!firstName || !lastName) {
+          // Skip rows with missing essential data (first and last name required)
+          if (!firstName?.trim() || !lastName?.trim()) {
             errors.push(`Row ${i + 1}: Missing first name or last name`);
             continue;
+          }
+
+          // Handle insurance field more robustly
+          let insurance = "No insurance provided";
+          if (authorizationId && authorizationId.trim()) {
+            insurance = authorizationId.trim();
           }
 
           const client = {
@@ -103,7 +109,7 @@ export function ImportClientsForm({ onClose }: { onClose: () => void }) {
             preferredName: preferredName?.trim() || undefined,
             clientId: clientRecordId?.trim() || id?.trim() || "No ID provided",
             phoneNumber: cellPhone?.trim() || "No phone provided",
-            insurance: authorizationId?.trim() || "No insurance provided",
+            insurance: insurance,
             annualAssessmentDate: planEndDate?.trim() || "12/31/2025",
             planProgram: planProgram?.trim() || undefined,
           };
