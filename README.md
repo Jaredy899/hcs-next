@@ -23,27 +23,30 @@ This is a Next.js version of the Highland County Services Case Management System
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies:
-   ```bash
+2. Install dependencies
+
+```bash
    pnpm install
-   ```
+```
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env.local`
-   - Add your Convex and Clerk configuration
+3.Set up environment variables
 
-4. Run the development server:
-   ```bash
+- Copy `.env.example` to `.env.local`
+- Add your Convex and Clerk configuration
+
+4.Run the development server
+
+```bash
    pnpm dev
-   ```
+```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+5.Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Environment Variables
 
 Required environment variables:
 
-```
+```sh
 NEXT_PUBLIC_CONVEX_URL=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
