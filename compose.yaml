@@ -1,8 +1,0 @@
-services:
-  web:
-    image: ghcr.io/jaredy899/hcs:latest
-    ports:
-      - "81:80"
-    env_file:
-      - .env.local
-    restart: unless-stopped 
