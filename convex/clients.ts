@@ -385,6 +385,32 @@ export const bulkImport = mutation({
       if (existingClient) {
         clientDbId = existingClient._id;
         console.log(`Found existing client: ${client.clientId} (${client.planProgram})`);
+        
+        // Update existing client with new information from CSV
+        const updatedName = client.preferredName 
+          ? `${client.firstName} (${client.preferredName}) ${client.lastName}`
+          : `${client.firstName} ${client.lastName}`;
+        
+        // Parse the annual assessment date from MM/DD/YYYY format
+        const dateParts = client.annualAssessmentDate.split('/').map(Number);
+        const [month, day, year] = dateParts;
+        
+        // Validate that we have valid date components
+        if (dateParts.length !== 3 || !month || !day || !year || month < 1 || month > 12) {
+          throw new Error(`Invalid date format: ${client.annualAssessmentDate}. Expected MM/DD/YYYY format.`);
+        }
+        
+        // Set the date to the first of the month at noon UTC to avoid timezone issues
+        const annualAssessmentDate = new Date(Date.UTC(year, month - 1, 1, 12, 0, 0)).getTime();
+        
+        // Update the existing client record with new information
+        await ctx.db.patch(existingClient._id, {
+          name: updatedName,
+          phoneNumber: client.phoneNumber,
+          insurance: client.insurance,
+          nextAnnualAssessment: annualAssessmentDate,
+        });
+        console.log(`Updated existing client: ${client.clientId} (${client.planProgram})`);
       } else {
         // Parse the annual assessment date from MM/DD/YYYY format
         const dateParts = client.annualAssessmentDate.split('/').map(Number);
@@ -524,6 +550,32 @@ export const bulkImportSimple = mutation({
       if (existingClient) {
         clientDbId = existingClient._id;
         console.log(`Found existing client: ${client.clientId}`);
+        
+        // Update existing client with new information from CSV
+        const updatedName = client.preferredName 
+          ? `${client.firstName} (${client.preferredName}) ${client.lastName}`
+          : `${client.firstName} ${client.lastName}`;
+        
+        // Parse the annual assessment date from MM/DD/YYYY format
+        const dateParts = client.annualAssessmentDate.split('/').map(Number);
+        const [month, day, year] = dateParts;
+        
+        // Validate that we have valid date components
+        if (dateParts.length !== 3 || !month || !day || !year || month < 1 || month > 12) {
+          throw new Error(`Invalid date format: ${client.annualAssessmentDate}. Expected MM/DD/YYYY format.`);
+        }
+        
+        // Set the date to the first of the month at noon UTC to avoid timezone issues
+        const annualAssessmentDate = new Date(Date.UTC(year, month - 1, 1, 12, 0, 0)).getTime();
+        
+        // Update the existing client record with new information
+        await ctx.db.patch(existingClient._id, {
+          name: updatedName,
+          phoneNumber: client.phoneNumber,
+          insurance: client.insurance,
+          nextAnnualAssessment: annualAssessmentDate,
+        });
+        console.log(`Updated existing client: ${client.clientId}`);
       } else {
         // Parse the annual assessment date from MM/DD/YYYY format
         const dateParts = client.annualAssessmentDate.split('/').map(Number);
