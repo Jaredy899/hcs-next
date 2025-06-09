@@ -66,4 +66,16 @@ export default defineSchema({
     text: v.string(),
     createdAt: v.number(),
   }).index("by_client", ["clientId"]),
+
+  stickyNotes: defineTable({
+    caseManagerId: v.id("users"),
+    text: v.string(),
+    color: v.optional(v.string()),
+    position: v.object({
+      x: v.number(),
+      y: v.number(),
+    }),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_case_manager", ["caseManagerId"]),
 });

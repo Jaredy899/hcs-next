@@ -19,6 +19,7 @@ import type * as crons from "../crons.js";
 import type * as http from "../http.js";
 import type * as notes from "../notes.js";
 import type * as router from "../router.js";
+import type * as stickyNotes from "../stickyNotes.js";
 import type * as todos from "../todos.js";
 
 /**
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   notes: typeof notes;
   router: typeof router;
+  stickyNotes: typeof stickyNotes;
   todos: typeof todos;
 }>;
 export declare const api: FilterApi<

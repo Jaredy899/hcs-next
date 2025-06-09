@@ -12,12 +12,43 @@ import { ThemeSwitcher } from "~/ThemeSwitcher";
 import { Button } from "~/components/ui/button";
 import { useGlobalHotkeys } from "~/hooks/useGlobalHotkeys";
 import { HotkeysButton, HotkeysHelp } from "~/components/HotkeysHelp";
+import { StickyNotes } from "~/components/StickyNotes";
 
 export function AppContent() {
   const [selectedClientId, setSelectedClientId] = useState<Id<"clients"> | null>(null);
   const [showAddClient, setShowAddClient] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showStickyNotes, setShowStickyNotes] = useState(false);
   const { signOut } = useClerk();
+  
+  const createStickyNote = useMutation(api.stickyNotes.create);
+  const stickyNotes = useQuery(api.stickyNotes.list) || [];
+
+  const handleCreateNote = async () => {
+    // Position new note near the last note, or center if no notes exist
+    let x, y;
+    if (stickyNotes.length > 0) {
+      const lastNote = stickyNotes[0]; // Most recent note
+      if (lastNote) {
+        x = lastNote.position.x + 100;
+        y = lastNote.position.y + 100;
+        // Keep within bounds
+        if (x > window.innerWidth - 300) x = lastNote.position.x - 100;
+        if (y > window.innerHeight - 200) y = lastNote.position.y - 100;
+      } else {
+        x = Math.max(50, (window.innerWidth - 300) / 2);
+        y = Math.max(100, (window.innerHeight - 200) / 2);
+      }
+    } else {
+      x = Math.max(50, (window.innerWidth - 300) / 2);
+      y = Math.max(100, (window.innerHeight - 200) / 2);
+    }
+    
+    await createStickyNote({
+      text: "",
+      position: { x, y },
+    });
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -34,6 +65,24 @@ export function AppContent() {
           <HotkeysButton onClick={() => setShowHelp(true)} />
           <ThemeSwitcher />
           <Authenticated>
+            <Button
+              onClick={async () => {
+                if (!showStickyNotes) {
+                  setShowStickyNotes(true);
+                  // If no notes exist, create one automatically
+                  if (stickyNotes.length === 0) {
+                    await handleCreateNote();
+                  }
+                } else {
+                  setShowStickyNotes(false);
+                }
+              }}
+              variant={showStickyNotes ? "default" : "outline"}
+              size="sm"
+              className="w-full sm:w-auto"
+            >
+              📝 Notes
+            </Button>
             <Button
               onClick={() => setShowAddClient(true)}
               className="w-full sm:w-auto"
@@ -71,6 +120,13 @@ export function AppContent() {
         </div>
       </main>
       <HotkeysHelp isOpen={showHelp} onClose={() => setShowHelp(false)} />
+      <Authenticated>
+        <StickyNotes 
+          showStickyNotes={showStickyNotes} 
+          onCreateNote={handleCreateNote}
+          onHideNotes={() => setShowStickyNotes(false)}
+        />
+      </Authenticated>
     </div>
   );
 }
